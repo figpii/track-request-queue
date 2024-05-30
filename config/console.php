@@ -1,12 +1,11 @@
 <?php
 
 $params = require __DIR__ . '/params.php';
-$db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic-console',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', 'queue'],
     'controllerNamespace' => 'app\commands',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -17,6 +16,22 @@ $config = [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'redis' => [
+            'class' => \yii\redis\Connection::class,
+            'hostname' => env('REDIS_HOST'),
+            'password' => env('REDIS_PASS'),
+            'port' => env('REDIS_PORT'),
+            'database' => 0,
+
+            // retry connecting after connection has timed out
+            // yiisoft/yii2-redis >=2.0.7 is required for this.
+            'retries' => 1,
+        ],
+        'queue' => [
+            'class' => \yii\queue\redis\Queue::class,
+            'redis' => 'redis', // Redis connection component or its config
+            'channel' => 'queue', // Queue channel key
+        ],
         'log' => [
             'targets' => [
                 [
@@ -25,7 +40,6 @@ $config = [
                 ],
             ],
         ],
-        'db' => $db,
     ],
     'params' => $params,
     /*

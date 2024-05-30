@@ -68,4 +68,22 @@ return array (
       '@yii/queue/amqp_interop' => $vendorDir . '/yiisoft/yii2-queue/src/drivers/amqp_interop',
     ),
   ),
+  'yiisoft/yii2-redis' => 
+  array (
+    'name' => 'yiisoft/yii2-redis',
+    'version' => '2.0.18.0',
+    'alias' => 
+    array (
+      '@yii/redis' => $vendorDir . '/yiisoft/yii2-redis/src',
+    ),
+  ),
+  'yiithings/yii2-dotenv' => 
+  array (
+    'name' => 'yiithings/yii2-dotenv',
+    'version' => '1.1.0.0',
+    'alias' => 
+    array (
+      '@yiithings/dotenv' => $vendorDir . '/yiithings/yii2-dotenv/src',
+    ),
+  ),
 );
