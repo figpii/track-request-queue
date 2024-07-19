@@ -13,6 +13,11 @@ $config = [
         '@tests' => '@app/tests',
     ],
     'components' => [
+        'bugsnag' => [
+            'class' => 'app\components\BugsnagComponent',
+            'apiKey' => '38348fad9ced4a74c0e35cfc39b6040c',
+            'notifyReleaseStages' => ['production', 'development'],
+        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],

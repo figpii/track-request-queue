@@ -32,6 +32,10 @@ class __Application {
      * @var mixed|object|null
      */
     public mixed $queue;
+    /**
+     * @var mixed|object|null
+     */
+    public mixed $bugsnag;
 }
 
 /**

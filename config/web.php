@@ -12,6 +12,11 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+        'bugsnag' => [
+            'class' => 'app\components\BugsnagComponent',
+            'apiKey' => '38348fad9ced4a74c0e35cfc39b6040c',
+            'notifyReleaseStages' => ['production', 'development'],
+        ],
         'redis' => [
             'class' => \yii\redis\Connection::class,
             'hostname' => env('REDIS_HOST'),
