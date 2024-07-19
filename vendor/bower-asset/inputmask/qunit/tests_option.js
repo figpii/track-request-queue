@@ -1,4 +1,5 @@
-export default function (qunit, $, Inputmask) {
+export default function (qunit, Inputmask) {
+    var $ = Inputmask.dependencyLib;
 	qunit.module("Extra options after masking");
 
 	qunit.test("decimal alias add suffix later - gkostov", function (assert) {
@@ -8,7 +9,7 @@ export default function (qunit, $, Inputmask) {
 		Inputmask({alias: "decimal", suffix: ""}).mask("testmask");
 		testmask.inputmask.option({suffix: "%"});
 
-		$("#testmask").Type("123.45");
+		$("#testmask").val("123.45");
 		assert.equal(testmask.value, "123.45%", "Result " + testmask.value);
 	});
 };

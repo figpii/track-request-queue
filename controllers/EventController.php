@@ -29,13 +29,19 @@ class EventController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex(): array
     {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+
         $request = Yii::$app->request;
         $queryParams = $request->getQueryParams();
+
         Yii::$app->queue->push(new TrackJob([
             'queryParams' => $queryParams
         ]));
-        return '{status: "success"}';
+
+        return [
+            'status' => 'success'
+        ];
     }
 }

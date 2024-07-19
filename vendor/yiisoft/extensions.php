@@ -12,13 +12,13 @@ return array (
       '@yii/faker' => $vendorDir . '/yiisoft/yii2-faker/src',
     ),
   ),
-  'yiisoft/yii2-symfonymailer' => 
+  'yiisoft/yii2-redis' => 
   array (
-    'name' => 'yiisoft/yii2-symfonymailer',
-    'version' => '2.0.4.0',
+    'name' => 'yiisoft/yii2-redis',
+    'version' => '2.0.18.0',
     'alias' => 
     array (
-      '@yii/symfonymailer' => $vendorDir . '/yiisoft/yii2-symfonymailer/src',
+      '@yii/redis' => $vendorDir . '/yiisoft/yii2-redis/src',
     ),
   ),
   'yiisoft/yii2-gii' => 
@@ -49,6 +49,15 @@ return array (
     ),
     'bootstrap' => 'yii\\bootstrap5\\i18n\\TranslationBootstrap',
   ),
+  'yiisoft/yii2-symfonymailer' => 
+  array (
+    'name' => 'yiisoft/yii2-symfonymailer',
+    'version' => '2.0.4.0',
+    'alias' => 
+    array (
+      '@yii/symfonymailer' => $vendorDir . '/yiisoft/yii2-symfonymailer/src',
+    ),
+  ),
   'yiisoft/yii2-queue' => 
   array (
     'name' => 'yiisoft/yii2-queue',
@@ -66,15 +75,6 @@ return array (
       '@yii/queue/gearman' => $vendorDir . '/yiisoft/yii2-queue/src/drivers/gearman',
       '@yii/queue/beanstalk' => $vendorDir . '/yiisoft/yii2-queue/src/drivers/beanstalk',
       '@yii/queue/amqp_interop' => $vendorDir . '/yiisoft/yii2-queue/src/drivers/amqp_interop',
-    ),
-  ),
-  'yiisoft/yii2-redis' => 
-  array (
-    'name' => 'yiisoft/yii2-redis',
-    'version' => '2.0.18.0',
-    'alias' => 
-    array (
-      '@yii/redis' => $vendorDir . '/yiisoft/yii2-redis/src',
     ),
   ),
   'yiithings/yii2-dotenv' => 
