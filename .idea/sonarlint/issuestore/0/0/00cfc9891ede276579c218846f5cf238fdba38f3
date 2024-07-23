@@ -1,0 +1,5 @@
+
+Z	php:S1131"@Remove the useless trailing whitespaces at the end of this line.(ªÎô©üÿÿÿÿ
+U	php:S1131"@Remove the useless trailing whitespaces at the end of this line.(óËµ¤
+ephp:S101"QRename class "__Application" to match the regular expression ^[A-Z][a-zA-Z0-9]*$.(ûşš‰
+aphp:S101,"MRename class "__WebUser" to match the regular expression ^[A-Z][a-zA-Z0-9]*$.(–èÃ

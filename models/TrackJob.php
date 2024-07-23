@@ -12,7 +12,7 @@ class TrackJob extends BaseObject implements JobInterface
 {
     public array $queryParams;
 
-    private function analyticsRequest($analytics_version, $payload, $id_site, $test_id, $user_id): void {
+    private function sendAnalyticsRequest($analytics_version, $payload, $id_site, $test_id, $user_id): void {
         $redis = Yii::$app->redis;
         $guzzle_client = new Client([
             'timeout' => 10.0,
@@ -36,11 +36,11 @@ class TrackJob extends BaseObject implements JobInterface
         }
     }
 
-    public function execute($queue): void
-    {
+    private function getTestInfo($test_id, $id_site): array|object {
+        $test_info = [];
         $redis = Yii::$app->redis;
         $guzzle_client = new Client([
-            'timeout' => 10.0,
+            'timeout' => 10.0
         ]);
         $figpii_client_auth = [
             'headers' => [
@@ -48,26 +48,6 @@ class TrackJob extends BaseObject implements JobInterface
                 'Cookie' => 'SFSESSIDCSMT=' . env('FIGPII_CSRF') . ';'
             ]
         ];
-
-        // Event parameters from query parameters
-        $event_name = $this->queryParams['event_name'] ?? $this->queryParams['e_c'];
-        $event_action = "ManualConversion";
-        $rec = 1;
-        $id_site = (int)($this->queryParams['idsite'] ?? $this->queryParams['analytics_id']);
-        $revenue = $this->queryParams['revenue'] ?? null; // Check if revenue is set
-        $test_id = (int)($this->queryParams['test_id'] ?? $this->queryParams['dimension1']);
-        $variation_id = (int)($this->queryParams['variation_id'] ?? $this->queryParams['dimension2']);
-        $event_url = $this->queryParams['url'] ?? $this->queryParams['event_url'] ?? null; // Check if url is set
-        $user_id = $this->queryParams['user_id'] ?? $this->queryParams['uid'] ?? $this->queryParams['vid'];
-        $send_image = 0;
-        $rand = time();
-
-        if (empty($event_name) || empty($id_site) || empty($test_id) || empty($variation_id) || empty($user_id)) {
-            return;
-        }
-
-        // Get test info
-        $test_info = null;
         $test_redis_key = $test_id . ':' . $id_site;
         if ($redis->exists($test_redis_key)) {
             $test_info = json_decode($redis->get($test_redis_key), true);
@@ -95,6 +75,25 @@ class TrackJob extends BaseObject implements JobInterface
                 Yii::$app->bugsnag->notifyException($e);
             }
         }
+        return $test_info;
+    }
+
+    public function execute($queue): void
+    {
+        // Event parameters from query parameters
+        $event_name = $this->queryParams['event_name'] ?? $this->queryParams['e_c'];
+        $event_action = "ManualConversion";
+        $rec = 1;
+        $id_site = (int)($this->queryParams['idsite'] ?? $this->queryParams['analytics_id']);
+        $revenue = $this->queryParams['revenue'] ?? null; // Check if revenue is set
+        $test_id = (int)($this->queryParams['test_id'] ?? $this->queryParams['dimension1']);
+        $variation_id = (int)($this->queryParams['variation_id'] ?? $this->queryParams['dimension2']);
+        $event_url = $this->queryParams['url'] ?? $this->queryParams['event_url'] ?? null; // Check if url is set
+        $user_id = $this->queryParams['user_id'] ?? $this->queryParams['uid'] ?? $this->queryParams['vid'];
+        $send_image = 0;
+        $rand = time();
+
+        $test_info = $this->getTestInfo($test_id, $id_site);
 
         // Handle different analytics versions
         $analytics_version = $test_info['analytic_version'];
@@ -120,7 +119,7 @@ class TrackJob extends BaseObject implements JobInterface
                 if ($event_url !== null) {
                     $options['query']['url'] = urlencode($event_url);
                 }
-                $this->analyticsRequest($analytics_version, $options, $id_site, $test_id, $user_id);
+                $this->sendAnalyticsRequest($analytics_version, $options, $id_site, $test_id, $user_id);
                 break;
             case 'v2':
                 // v2 requires 2 requests, one to send figpiiexperiment event second one to send the actual event;
@@ -157,8 +156,8 @@ class TrackJob extends BaseObject implements JobInterface
                 if ($event_url !== null) {
                     $event_options['query']['url'] = urlencode($event_url);
                 }
-                $this->analyticsRequest($analytics_version, $figpii_experiment_event_options, $id_site, $test_id, $user_id);
-                $this->analyticsRequest($analytics_version, $event_options, $id_site, $test_id, $user_id);
+                $this->sendAnalyticsRequest($analytics_version, $figpii_experiment_event_options, $id_site, $test_id, $user_id);
+                $this->sendAnalyticsRequest($analytics_version, $event_options, $id_site, $test_id, $user_id);
                 break;
         }
     }
